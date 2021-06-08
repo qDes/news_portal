@@ -52,4 +52,5 @@ volumes:
 
 networks:
   news_net:
-    driver: bridge
+    #driver: bridge
+    external: true

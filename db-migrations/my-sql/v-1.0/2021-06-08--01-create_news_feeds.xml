@@ -1,0 +1,147 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+
+    <changeSet id="2021-06-08--news_politics_table_create" author="Kozlov-A">
+        <createTable tableName="news_politics">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(1000)"></column>
+            <column name="text" type="varchar(20000)"></column>
+            <column name="dttm_inserted" type="timestamp" defaultValueComputed="now()"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2021-06-08--news_politics_table_id_addAutoIncrement" author="Kozlov-A">
+        <addAutoIncrement
+                columnDataType="bigint"
+                columnName="id"
+                incrementBy="1"
+                startWith="1"
+                tableName="news_politics"/>
+    </changeSet>
+
+    <changeSet id="2021-06-08--news_economy_table_create" author="Kozlov-A">
+        <createTable tableName="news_economy">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(1000)"></column>
+            <column name="text" type="varchar(20000)"></column>
+            <column name="dttm_inserted" type="timestamp" defaultValueComputed="now()"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2021-06-08--news_economy_table_id_addAutoIncrement" author="Kozlov-A">
+        <addAutoIncrement
+                columnDataType="bigint"
+                columnName="id"
+                incrementBy="1"
+                startWith="1"
+                tableName="news_economy"/>
+    </changeSet>
+
+    <changeSet id="2021-06-08--news_science_table_create" author="Kozlov-A">
+        <createTable tableName="news_science">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(1000)"></column>
+            <column name="text" type="varchar(20000)"></column>
+            <column name="dttm_inserted" type="timestamp" defaultValueComputed="now()"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2021-06-08--news_science_table_id_addAutoIncrement" author="Kozlov-A">
+        <addAutoIncrement
+                columnDataType="bigint"
+                columnName="id"
+                incrementBy="1"
+                startWith="1"
+                tableName="news_science"/>
+    </changeSet>
+
+    <changeSet id="2021-06-08--news_science_economy_table_create" author="Kozlov-A">
+        <createTable tableName="news_science_economy">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(1000)"></column>
+            <column name="text" type="varchar(20000)"></column>
+            <column name="dttm_inserted" type="timestamp" defaultValueComputed="now()"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2021-06-08--news_science_economy_table_id_addAutoIncrement" author="Kozlov-A">
+        <addAutoIncrement
+                columnDataType="bigint"
+                columnName="id"
+                incrementBy="1"
+                startWith="1"
+                tableName="news_science_economy"/>
+    </changeSet>
+
+    <changeSet id="2021-06-08--news_science_politics_table_create" author="Kozlov-A">
+        <createTable tableName="news_science_politics">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(1000)"></column>
+            <column name="text" type="varchar(20000)"></column>
+            <column name="dttm_inserted" type="timestamp" defaultValueComputed="now()"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2021-06-08--news_science_politics_table_id_addAutoIncrement" author="Kozlov-A">
+        <addAutoIncrement
+                columnDataType="bigint"
+                columnName="id"
+                incrementBy="1"
+                startWith="1"
+                tableName="news_science_politics"/>
+    </changeSet>
+
+    <changeSet id="2021-06-08--news_economy_politics_table_create" author="Kozlov-A">
+        <createTable tableName="news_economy_politics">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(1000)"></column>
+            <column name="text" type="varchar(20000)"></column>
+            <column name="dttm_inserted" type="timestamp" defaultValueComputed="now()"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2021-06-08--news_economy_politics_table_id_addAutoIncrement" author="Kozlov-A">
+        <addAutoIncrement
+                columnDataType="bigint"
+                columnName="id"
+                incrementBy="1"
+                startWith="1"
+                tableName="news_economy_politics"/>
+    </changeSet>
+
+    <changeSet id="2021-06-08--news_economy_politics_science_table_create" author="Kozlov-A">
+        <createTable tableName="news_economy_politics_science">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(1000)"></column>
+            <column name="text" type="varchar(20000)"></column>
+            <column name="dttm_inserted" type="timestamp" defaultValueComputed="now()"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2021-06-08--news_economy_politics_science_table_id_addAutoIncrement" author="Kozlov-A">
+        <addAutoIncrement
+                columnDataType="bigint"
+                columnName="id"
+                incrementBy="1"
+                startWith="1"
+                tableName="news_economy_politics_science"/>
+    </changeSet>
+</databaseChangeLog>

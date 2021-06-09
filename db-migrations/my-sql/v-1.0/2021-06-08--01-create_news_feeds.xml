@@ -12,6 +12,7 @@
             </column>
             <column name="title" type="varchar(1000)"></column>
             <column name="text" type="varchar(20000)"></column>
+            <column name="url" type="varchar(200)"></column>
             <column name="dttm_inserted" type="timestamp" defaultValueComputed="now()"/>
         </createTable>
     </changeSet>
@@ -32,6 +33,7 @@
             </column>
             <column name="title" type="varchar(1000)"></column>
             <column name="text" type="varchar(20000)"></column>
+            <column name="url" type="varchar(200)"></column>
             <column name="dttm_inserted" type="timestamp" defaultValueComputed="now()"/>
         </createTable>
     </changeSet>
@@ -52,6 +54,7 @@
             </column>
             <column name="title" type="varchar(1000)"></column>
             <column name="text" type="varchar(20000)"></column>
+            <column name="url" type="varchar(200)"></column>
             <column name="dttm_inserted" type="timestamp" defaultValueComputed="now()"/>
         </createTable>
     </changeSet>
@@ -72,6 +75,7 @@
             </column>
             <column name="title" type="varchar(1000)"></column>
             <column name="text" type="varchar(20000)"></column>
+            <column name="url" type="varchar(200)"></column>
             <column name="dttm_inserted" type="timestamp" defaultValueComputed="now()"/>
         </createTable>
     </changeSet>
@@ -92,6 +96,7 @@
             </column>
             <column name="title" type="varchar(1000)"></column>
             <column name="text" type="varchar(20000)"></column>
+            <column name="url" type="varchar(200)"></column>
             <column name="dttm_inserted" type="timestamp" defaultValueComputed="now()"/>
         </createTable>
     </changeSet>
@@ -112,6 +117,7 @@
             </column>
             <column name="title" type="varchar(1000)"></column>
             <column name="text" type="varchar(20000)"></column>
+            <column name="url" type="varchar(200)"></column>
             <column name="dttm_inserted" type="timestamp" defaultValueComputed="now()"/>
         </createTable>
     </changeSet>
@@ -132,6 +138,7 @@
             </column>
             <column name="title" type="varchar(1000)"></column>
             <column name="text" type="varchar(20000)"></column>
+            <column name="url" type="varchar(200)"></column>
             <column name="dttm_inserted" type="timestamp" defaultValueComputed="now()"/>
         </createTable>
     </changeSet>

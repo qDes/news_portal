@@ -15,8 +15,8 @@ func main() {
 	logger := internal.InitLogger()
 	zap.ReplaceGlobals(logger)
 
-	kafka_conn := "localhost:9092"
-	kafkaBrokers := []string{kafka_conn}
+	kafkaConn := "localhost:9092"
+	kafkaBrokers := []string{kafkaConn}
 	producer, err := internal.NewProducer(kafkaBrokers)
 
 	topic := "raw_news"
@@ -25,7 +25,7 @@ func main() {
 	}
 
 	var (
-		page internal.WebPage
+		page internal.RawPage
 		msg  *sarama.ProducerMessage
 	)
 	for i := 0; i <= 10000; i++ {
@@ -42,4 +42,5 @@ func main() {
 	}
 
 }
+
 

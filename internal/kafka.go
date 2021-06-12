@@ -2,6 +2,7 @@ package internal
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/Shopify/sarama"
 	"go.uber.org/zap"
@@ -50,4 +51,15 @@ func PrepareMessage(topic string, record *RawPage) *sarama.ProducerMessage {
 	}
 
 	return msg
+}
+
+func ExportPage(producer sarama.SyncProducer, topic string, page *RawPage) {
+	msg := PrepareMessage(topic, page)
+
+	partition, offset, err := producer.SendMessage(msg)
+	if err != nil {
+		zap.L().Error("Kafka sending message error", zap.Error(err))
+	} else {
+		zap.L().Info(fmt.Sprintf("Message was saved to partion: %d.\nMessage offset is: %d.\n", partition, offset))
+	}
 }

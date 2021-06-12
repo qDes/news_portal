@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"news_portal/internal"
+	"time"
 	"unicode/utf8"
 
 	"github.com/pkg/errors"
@@ -16,16 +17,15 @@ var cache = make(map[string]int)
 
 func ProcessLoop(roc <-chan *internal.RawPage, soc chan<- *internal.RawPage) {
 	for page := range roc {
-		//fmt.Println("Process", page)
+		fmt.Println(page.URL)
 		if checkUrl(page.URL) {
-			fmt.Println(1)
 			bodyB, err := downloadURL(page.URL)
 			if err != nil {
 				zap.L().Error("load error", zap.Error(err))
 			} else {
 				page.HTML = byteDecoder(bodyB)
 			}
-
+			time.Sleep(time.Duration(1) * time.Second)
 			soc <- page
 		}
 
@@ -33,7 +33,7 @@ func ProcessLoop(roc <-chan *internal.RawPage, soc chan<- *internal.RawPage) {
 }
 
 func checkUrl(url string) bool {
-	fmt.Println("cache size", len(cache))
+	//fmt.Println("cache size", len(cache))
 	if _, ok := cache[url]; ok {
 		return false
 	} else {

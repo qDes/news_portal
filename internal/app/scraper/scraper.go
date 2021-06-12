@@ -2,7 +2,6 @@ package scraper
 
 import (
 	"crypto/tls"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -10,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Shopify/sarama"
 	"github.com/antchfx/htmlquery"
 	"go.uber.org/zap"
 )
@@ -35,14 +35,12 @@ func MakeClient(proxy string, timeoutSec int) *http.Client {
 	return &http.Client{Transport: transport, Timeout: time.Duration(timeoutSec) * time.Second}
 }
 
-
-
-func PostProcessLoop(roc <-chan *internal.RawPage) {
+func PostProcessLoop(roc <-chan *internal.RawPage, producer sarama.SyncProducer, topic string) {
 	for page := range roc {
-		if  len(page.HTML)!= 0 {
-			fmt.Println("PostProc:", len(page.HTML))
+		if len(page.HTML) != 0 {
+			internal.ExportPage(producer, topic, page)
 		} else {
-			fmt.Println("sasi")
+			zap.L().Info("get empty page, wouldn't process")
 		}
 
 	}
@@ -94,18 +92,17 @@ func GetURLX(urlX URLX, client *http.Client) []string {
 
 }
 
-func ScanLoop(url URLX, soc chan<- *internal.RawPage) {
-	var page internal.RawPage
+func ScanLoop(urlx URLX, soc chan<- *internal.RawPage) {
 	client := &http.Client{}
 	currentTime := time.Now()
 	for {
-		fetchedUrls := GetURLX(url, client)
-		for _, item := range fetchedUrls {
-			//fmt.Println(item)
-			page = internal.RawPage{
+		fetchedUrls := GetURLX(urlx, client)
+		for _, url := range fetchedUrls {
+			//fmt.Println(i)
+			page := internal.RawPage{
 				HTML:     "",
-				URL:      item,
-				IDSource: url.IDLinkSource,
+				URL:      url,
+				IDSource: urlx.IDLinkSource,
 				DTTM:     currentTime.Format("2006-01-02-15-04"),
 			}
 			soc <- &page
@@ -118,6 +115,7 @@ func ScanLoop(url URLX, soc chan<- *internal.RawPage) {
 
 func GetScraperConfig() []URLX {
 	var res []URLX
+
 	politicsRia := URLX{
 		LinkSource:   "https://ria.ru/politicsRia/",
 		Xpath:        "//div[@class=\"list-item__content\"]//a/@href",
@@ -133,6 +131,10 @@ func GetScraperConfig() []URLX {
 		Xpath:        "//div[@class=\"list-item__content\"]//a/@href",
 		IDLinkSource: 2,
 	}
+	res = append(res, politicsRia)
+	res = append(res, scienceRia)
+	res = append(res, economyRia)
+
 	politicsAif := URLX{
 		LinkSource:   "https://aif.ru/politics",
 		Xpath:        "//div[@class=\"box_info\"]//a/@href",
@@ -143,12 +145,16 @@ func GetScraperConfig() []URLX {
 		Xpath:        "//div[@class=\"box_info\"]//a/@href",
 		IDLinkSource: 1,
 	}
+	scienceAif := URLX{
+		LinkSource:   "https://aif.ru/society/science",
+		Xpath:        "//div[@class=\"box_info\"]//a/@href",
+		IDLinkSource: 2,
+	}
 
-	res = append(res, politicsRia)
-	res = append(res, scienceRia)
-	res = append(res, economyRia)
 	res = append(res, politicsAif)
 	res = append(res, economyAif)
+	res = append(res, scienceAif)
+
 	return res
 }
 

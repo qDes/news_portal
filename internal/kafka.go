@@ -15,9 +15,16 @@ type RawPage struct {
 	DTTM     string
 }
 
+type NewsPage struct {
+	Title string
+	Text  string
+	Url   string
+	Dttm  string
+}
+
 func NewConsumer(brokers []string) (sarama.Consumer, error) {
 	config := sarama.NewConfig()
-	config.ClientID ="news-processor"
+	config.ClientID = "news-processor"
 	//config.Consumer.Return.Errors = true
 	// Defaults to OffsetNewest.
 
@@ -37,7 +44,7 @@ func NewProducer(brokers []string) (sarama.SyncProducer, error) {
 	return producer, err
 }
 
-func PrepareMessage(topic string, record *RawPage) *sarama.ProducerMessage {
+func PrepareMessage(topic string, record interface{}) *sarama.ProducerMessage {
 	b, err := json.Marshal(record)
 	if err != nil {
 		zap.L().Error("prepareMessage error", zap.String("function", "prepareMessage"), zap.Error(err))
@@ -53,7 +60,7 @@ func PrepareMessage(topic string, record *RawPage) *sarama.ProducerMessage {
 	return msg
 }
 
-func ExportPage(producer sarama.SyncProducer, topic string, page *RawPage) {
+func ExportPage(producer sarama.SyncProducer, topic string, page interface{}) {
 	msg := PrepareMessage(topic, page)
 
 	partition, offset, err := producer.SendMessage(msg)

@@ -35,34 +35,18 @@ func MakeClient(proxy string, timeoutSec int) *http.Client {
 	return &http.Client{Transport: transport, Timeout: time.Duration(timeoutSec) * time.Second}
 }
 
-func ProcessLoop(roc <-chan *internal.RawPage, soc chan<- *internal.RawPage) {
+
+
+func PostProcessLoop(roc <-chan *internal.RawPage) {
 	for page := range roc {
-		fmt.Println("Process", page)
-		soc <- page
+		if  len(page.HTML)!= 0 {
+			fmt.Println("PostProc:", len(page.HTML))
+		} else {
+			fmt.Println("sasi")
+		}
 
 	}
 }
-
-func PostProcessLoop(roc <-chan *internal.RawPage)  {
-	for page := range roc {
-		fmt.Println("PostProc:", page)
-	}
-}
-
-func getBaseURL(urlNews string) string {
-	var result strings.Builder
-	u, err := url.Parse(urlNews)
-	if err != nil {
-		zap.L().Error("getBaseURL url.Parse error", zap.String("url", urlNews), zap.Error(err))
-	}
-	protocol := strings.Split(urlNews, "/")[0]
-	result.WriteString(protocol)
-	result.WriteString("//")
-	result.WriteString(u.Hostname())
-
-	return result.String()
-}
-
 
 // GetURLX tries to extract urls from webpage
 func GetURLX(urlX URLX, client *http.Client) []string {
@@ -134,25 +118,37 @@ func ScanLoop(url URLX, soc chan<- *internal.RawPage) {
 
 func GetScraperConfig() []URLX {
 	var res []URLX
-	politics := URLX{
-		LinkSource:   "https://ria.ru/politics/",
+	politicsRia := URLX{
+		LinkSource:   "https://ria.ru/politicsRia/",
 		Xpath:        "//div[@class=\"list-item__content\"]//a/@href",
 		IDLinkSource: 0,
 	}
-	economy := URLX{
-		LinkSource:   "https://ria.ru/economy/",
+	economyRia := URLX{
+		LinkSource:   "https://ria.ru/economyRia/",
 		Xpath:        "//div[@class=\"list-item__content\"]//a/@href",
 		IDLinkSource: 1,
 	}
-	science := URLX{
-		LinkSource:   "https://ria.ru/science/",
+	scienceRia := URLX{
+		LinkSource:   "https://ria.ru/scienceRia/",
 		Xpath:        "//div[@class=\"list-item__content\"]//a/@href",
 		IDLinkSource: 2,
 	}
-	res = append(res, politics)
-	res = append(res, science)
-	res = append(res, economy)
+	politicsAif := URLX{
+		LinkSource:   "https://aif.ru/politics",
+		Xpath:        "//div[@class=\"box_info\"]//a/@href",
+		IDLinkSource: 0,
+	}
+	economyAif := URLX{
+		LinkSource:   "https://aif.ru/money",
+		Xpath:        "//div[@class=\"box_info\"]//a/@href",
+		IDLinkSource: 1,
+	}
 
+	res = append(res, politicsRia)
+	res = append(res, scienceRia)
+	res = append(res, economyRia)
+	res = append(res, politicsAif)
+	res = append(res, economyAif)
 	return res
 }
 
@@ -165,4 +161,18 @@ func Find(slice *[]string, val string) bool {
 		}
 	}
 	return false
+}
+
+func getBaseURL(urlNews string) string {
+	var result strings.Builder
+	u, err := url.Parse(urlNews)
+	if err != nil {
+		zap.L().Error("getBaseURL url.Parse error", zap.String("url", urlNews), zap.Error(err))
+	}
+	protocol := strings.Split(urlNews, "/")[0]
+	result.WriteString(protocol)
+	result.WriteString("//")
+	result.WriteString(u.Hostname())
+
+	return result.String()
 }

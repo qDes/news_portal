@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"news_portal/internal"
 	processor "news_portal/internal/app/news_processor"
 
@@ -13,7 +12,7 @@ import (
 func main() {
 	logger := internal.InitLogger()
 	zap.ReplaceGlobals(logger)
-	fmt.Println(1)
+
 	kafkaConn := "localhost:9092"
 	kafkaBrokers := []string{kafkaConn}
 	master, err := internal.NewConsumer(kafkaBrokers)
@@ -33,6 +32,9 @@ func main() {
 		logger.Error("kafka partions error", zap.Error(err))
 	}
 	consumer, err := master.ConsumePartition(topic, partions[0], sarama.OffsetOldest)
+	if err != nil {
+		logger.Error("condumer error", zap.Error(err))
+	}
 
 	for i := range consumer.Messages() {
 		//fmt.Println(string(i.Value))

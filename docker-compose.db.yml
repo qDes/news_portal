@@ -5,44 +5,32 @@ networks:
     external: true
 
 services:
-  db-master:
-    image: mysql:5.7
-    restart: always
-    volumes:
-      - ./configs/my-cnf/my.cnf:/etc/mysql/conf.d/my.cnf
-    command:
-      - mysqld
-      - --max_connections=2500
+
+  db:
+    image: postgres:11
+    container_name: db
     environment:
-      MYSQL_DATABASE: 'db'
-      # So you don't have to use root, but you can if you like
-      MYSQL_USER: 'user'
-      # You can use whatever password you like
-      MYSQL_PASSWORD: 'password'
-      # Password for root access
-      MYSQL_ROOT_PASSWORD: 'password'
-      MYSQL_REPLICATION_MODE: 'master'
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=postgres
     ports:
-      # <Port exposed> : < MySQL Port running inside container>
-      - '3306:3306'
-    expose:
-      - '3306'
+      - 5432:5432
     networks:
       - news_net
 
-  liquibase:
+  liquibase-pg:
     build:
-      context: ./db-migrations/my-sql/
+      context: ./db-migrations/postgresql
     command: update
     restart: on-failure
-    container_name: liquibase
+    container_name: liquibase-pg
     environment:
       - LIQUIBASE_CHANGELOG=changelog.xml
-      - LIQUIBASE_URL=jdbc:mysql://db-master:3306
+      - LIQUIBASE_URL=jdbc:postgresql://db:5432/postgres
       - LIQUIBASE_USERNAME=user
-      - LIQUIBASE_PASSWORD=password
-      - LIQUIBASE_OPTS=--defaultSchemaName=db --liquibaseSchemaName=db
+      - LIQUIBASE_PASSWORD=pass
+      - LIQUIBASE_OPTS=--defaultSchemaName=public --liquibaseSchemaName=public
     depends_on:
-      - db-master
+      - db
     networks:
       - news_net

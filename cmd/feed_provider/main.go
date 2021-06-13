@@ -4,12 +4,17 @@ import (
 	"log"
 	"net"
 	feed "news_portal/api/proto"
+	"news_portal/internal"
 	feedServer "news_portal/internal/app/feed"
 
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 )
 
 func main() {
+	logger := internal.InitLogger()
+	zap.ReplaceGlobals(logger)
+
 	dbConn := "postgresql://user:pass@0.0.0.0:5432/postgres?sslmode=disable"
 	port := "11000"
 	lis, err := net.Listen("tcp", "0.0.0.0:"+port)

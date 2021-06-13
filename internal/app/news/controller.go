@@ -23,7 +23,9 @@ func Science(resp http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		zap.L().Error("science handler err on grpc call", zap.Error(err))
 	}
-	fmt.Println(res.Feed)
+	for _, item := range res.Feed {
+		fmt.Println(item.Title)
+	}
 	resp.Write([]byte("Hello Science!"))
 }
 

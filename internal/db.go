@@ -68,12 +68,13 @@ func GetFeedByTopic(db *sqlx.DB, topic string) []NewsPage {
 		title, text, url, date string
 	)
 	query := `SELECT title, text, url, dttm_inserted FROM ` + topic + ";"
+	zap.L().Info(topic)
 	rows, err := db.Query(query)
 	if err != nil {
 		zap.L().Error("select feed error",
 			zap.String("function", "GetFeedByTopic"), zap.Error(err))
 	}
-	defer rows.Close()
+
 	for rows.Next() {
 		if err = rows.Scan(&title, &text, &url, &date); err != nil {
 			zap.L().Error("scan feed error",
@@ -86,5 +87,6 @@ func GetFeedByTopic(db *sqlx.DB, topic string) []NewsPage {
 			Dttm:  date,
 		})
 	}
+	rows.Close()
 	return res
 }

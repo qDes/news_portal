@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package feed;
+option go_package = "news_portal/api/proto/feed";
+
+import "google/protobuf/empty.proto";
+
+
+service FeedService{
+  rpc GetFeed(GetFeedRequest) returns (GetFeedResponse) {}
+
+}
+
+message GetFeedRequest {
+  int64 user_id = 1;
+}
+
+message GetFeedResponse {
+  repeated News feed = 1;
+}
+
+message News {
+  int64 id = 1;
+  string title = 2;
+  string text = 3;
+  string date = 4;
+}

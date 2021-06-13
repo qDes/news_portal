@@ -8,7 +8,17 @@ import "google/protobuf/empty.proto";
 
 service FeedService{
   rpc GetFeed(GetFeedRequest) returns (GetFeedResponse) {}
+  rpc SubscribeUser(SubscribeUserRequest) returns (google.protobuf.Empty) {}
+  rpc UnSubscribeUser(UnSubscribeUserRequest) returns (google.protobuf.Empty) {}
+}
 
+message SubscribeUserRequest {
+  int64 user_id = 1;
+  repeated string topics = 2;
+}
+message UnSubscribeUserRequest {
+  int64 user_id = 1;
+  repeated string topics = 2;
 }
 
 message GetFeedRequest {

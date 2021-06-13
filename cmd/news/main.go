@@ -13,6 +13,9 @@ func main() {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/", news.Index)
+	r.HandleFunc("/politics", news.Politics)
+	r.HandleFunc("/economy", news.Economy)
+	r.HandleFunc("/science", news.Science)
 
 	srv := &http.Server{
 		Handler: r,

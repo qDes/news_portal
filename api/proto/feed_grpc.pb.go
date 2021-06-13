@@ -19,9 +19,10 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FeedServiceClient interface {
-	GetFeed(ctx context.Context, in *GetFeedRequest, opts ...grpc.CallOption) (*GetFeedResponse, error)
+	GetUserFeed(ctx context.Context, in *GetUserFeedRequest, opts ...grpc.CallOption) (*FeedResponse, error)
 	SubscribeUser(ctx context.Context, in *SubscribeUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UnSubscribeUser(ctx context.Context, in *UnSubscribeUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetFeed(ctx context.Context, in *GetFeedRequest, opts ...grpc.CallOption) (*FeedResponse, error)
 }
 
 type feedServiceClient struct {
@@ -32,9 +33,9 @@ func NewFeedServiceClient(cc grpc.ClientConnInterface) FeedServiceClient {
 	return &feedServiceClient{cc}
 }
 
-func (c *feedServiceClient) GetFeed(ctx context.Context, in *GetFeedRequest, opts ...grpc.CallOption) (*GetFeedResponse, error) {
-	out := new(GetFeedResponse)
-	err := c.cc.Invoke(ctx, "/feed.FeedService/GetFeed", in, out, opts...)
+func (c *feedServiceClient) GetUserFeed(ctx context.Context, in *GetUserFeedRequest, opts ...grpc.CallOption) (*FeedResponse, error) {
+	out := new(FeedResponse)
+	err := c.cc.Invoke(ctx, "/feed.FeedService/GetUserFeed", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -59,13 +60,23 @@ func (c *feedServiceClient) UnSubscribeUser(ctx context.Context, in *UnSubscribe
 	return out, nil
 }
 
+func (c *feedServiceClient) GetFeed(ctx context.Context, in *GetFeedRequest, opts ...grpc.CallOption) (*FeedResponse, error) {
+	out := new(FeedResponse)
+	err := c.cc.Invoke(ctx, "/feed.FeedService/GetFeed", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FeedServiceServer is the server API for FeedService service.
 // All implementations must embed UnimplementedFeedServiceServer
 // for forward compatibility
 type FeedServiceServer interface {
-	GetFeed(context.Context, *GetFeedRequest) (*GetFeedResponse, error)
+	GetUserFeed(context.Context, *GetUserFeedRequest) (*FeedResponse, error)
 	SubscribeUser(context.Context, *SubscribeUserRequest) (*emptypb.Empty, error)
 	UnSubscribeUser(context.Context, *UnSubscribeUserRequest) (*emptypb.Empty, error)
+	GetFeed(context.Context, *GetFeedRequest) (*FeedResponse, error)
 	mustEmbedUnimplementedFeedServiceServer()
 }
 
@@ -73,14 +84,17 @@ type FeedServiceServer interface {
 type UnimplementedFeedServiceServer struct {
 }
 
-func (UnimplementedFeedServiceServer) GetFeed(context.Context, *GetFeedRequest) (*GetFeedResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetFeed not implemented")
+func (UnimplementedFeedServiceServer) GetUserFeed(context.Context, *GetUserFeedRequest) (*FeedResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserFeed not implemented")
 }
 func (UnimplementedFeedServiceServer) SubscribeUser(context.Context, *SubscribeUserRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SubscribeUser not implemented")
 }
 func (UnimplementedFeedServiceServer) UnSubscribeUser(context.Context, *UnSubscribeUserRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UnSubscribeUser not implemented")
+}
+func (UnimplementedFeedServiceServer) GetFeed(context.Context, *GetFeedRequest) (*FeedResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFeed not implemented")
 }
 func (UnimplementedFeedServiceServer) mustEmbedUnimplementedFeedServiceServer() {}
 
@@ -95,20 +109,20 @@ func RegisterFeedServiceServer(s grpc.ServiceRegistrar, srv FeedServiceServer) {
 	s.RegisterService(&FeedService_ServiceDesc, srv)
 }
 
-func _FeedService_GetFeed_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetFeedRequest)
+func _FeedService_GetUserFeed_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserFeedRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FeedServiceServer).GetFeed(ctx, in)
+		return srv.(FeedServiceServer).GetUserFeed(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/feed.FeedService/GetFeed",
+		FullMethod: "/feed.FeedService/GetUserFeed",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FeedServiceServer).GetFeed(ctx, req.(*GetFeedRequest))
+		return srv.(FeedServiceServer).GetUserFeed(ctx, req.(*GetUserFeedRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -149,6 +163,24 @@ func _FeedService_UnSubscribeUser_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FeedService_GetFeed_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFeedRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FeedServiceServer).GetFeed(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/feed.FeedService/GetFeed",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FeedServiceServer).GetFeed(ctx, req.(*GetFeedRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // FeedService_ServiceDesc is the grpc.ServiceDesc for FeedService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -157,8 +189,8 @@ var FeedService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*FeedServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetFeed",
-			Handler:    _FeedService_GetFeed_Handler,
+			MethodName: "GetUserFeed",
+			Handler:    _FeedService_GetUserFeed_Handler,
 		},
 		{
 			MethodName: "SubscribeUser",
@@ -167,6 +199,10 @@ var FeedService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UnSubscribeUser",
 			Handler:    _FeedService_UnSubscribeUser_Handler,
+		},
+		{
+			MethodName: "GetFeed",
+			Handler:    _FeedService_GetFeed_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

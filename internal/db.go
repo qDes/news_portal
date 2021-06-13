@@ -61,3 +61,30 @@ func GetTables(topic string) []string {
 	}
 	return []string{}
 }
+
+func GetFeedByTopic(db *sqlx.DB, topic string) []NewsPage {
+	var (
+		res                    []NewsPage
+		title, text, url, date string
+	)
+	query := `SELECT title, text, url, dttm_inserted FROM ` + topic + ";"
+	rows, err := db.Query(query)
+	if err != nil {
+		zap.L().Error("select feed error",
+			zap.String("function", "GetFeedByTopic"), zap.Error(err))
+	}
+	defer rows.Close()
+	for rows.Next() {
+		if err = rows.Scan(&title, &text, &url, &date); err != nil {
+			zap.L().Error("scan feed error",
+				zap.String("function", "GetFeedByTopic"), zap.Error(err))
+		}
+		res = append(res, NewsPage{
+			Title: title,
+			Text:  text,
+			Url:   url,
+			Dttm:  date,
+		})
+	}
+	return res
+}

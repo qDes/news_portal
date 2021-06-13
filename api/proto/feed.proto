@@ -7,9 +7,14 @@ import "google/protobuf/empty.proto";
 
 
 service FeedService{
-  rpc GetFeed(GetFeedRequest) returns (GetFeedResponse) {}
+  rpc GetUserFeed(GetUserFeedRequest) returns (FeedResponse) {}
   rpc SubscribeUser(SubscribeUserRequest) returns (google.protobuf.Empty) {}
   rpc UnSubscribeUser(UnSubscribeUserRequest) returns (google.protobuf.Empty) {}
+  rpc GetFeed(GetFeedRequest) returns (FeedResponse) {}
+}
+
+message GetFeedRequest {
+  string topic = 1;
 }
 
 message SubscribeUserRequest {
@@ -21,11 +26,11 @@ message UnSubscribeUserRequest {
   repeated string topics = 2;
 }
 
-message GetFeedRequest {
+message GetUserFeedRequest {
   int64 user_id = 1;
 }
 
-message GetFeedResponse {
+message FeedResponse {
   repeated News feed = 1;
 }
 

@@ -117,17 +117,17 @@ func GetScraperConfig() []URLX {
 	var res []URLX
 
 	politicsRia := URLX{
-		LinkSource:   "https://ria.ru/politicsRia/",
+		LinkSource:   "https://ria.ru/politics/",
 		Xpath:        "//div[@class=\"list-item__content\"]//a/@href",
 		IDLinkSource: 0,
 	}
 	economyRia := URLX{
-		LinkSource:   "https://ria.ru/economyRia/",
+		LinkSource:   "https://ria.ru/economy/",
 		Xpath:        "//div[@class=\"list-item__content\"]//a/@href",
 		IDLinkSource: 1,
 	}
 	scienceRia := URLX{
-		LinkSource:   "https://ria.ru/scienceRia/",
+		LinkSource:   "https://ria.ru/science/",
 		Xpath:        "//div[@class=\"list-item__content\"]//a/@href",
 		IDLinkSource: 2,
 	}

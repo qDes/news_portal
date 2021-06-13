@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"news_portal/internal"
 	"sync"
 
@@ -13,6 +12,9 @@ import (
 func main() {
 	logger := internal.InitLogger()
 	zap.ReplaceGlobals(logger)
+
+	dbSv := internal.NewDB()
+
 	kafkaConn := "localhost:9092"
 	kafkaBrokers := []string{kafkaConn}
 	master, err := internal.NewConsumer(kafkaBrokers)
@@ -35,9 +37,9 @@ func main() {
 
 	var wg sync.WaitGroup
 	wg.Add(1)
-	go ReadTopic(consumerEc)
-	go ReadTopic(consumerPo)
-	go ReadTopic(consumerSc)
+	go WriteFromTopic(consumerEc, dbSv, topicEconomy)
+	go WriteFromTopic(consumerPo, dbSv, topicPolitics)
+	go WriteFromTopic(consumerSc, dbSv, topicScience)
 	wg.Wait()
 
 }
@@ -50,13 +52,14 @@ func GetConsumer(master sarama.Consumer, topic string, partions []int32) sarama.
 	return consumer
 }
 
-func ReadTopic(consumer sarama.PartitionConsumer) {
+func WriteFromTopic(consumer sarama.PartitionConsumer, db *internal.DB, topic string) {
 	for i := range consumer.Messages() {
 		var page internal.NewsPage
 		err := json.Unmarshal(i.Value, &page)
 		if err != nil {
 			zap.L().Error("unmarshalling error", zap.Error(err))
 		}
-		fmt.Println(page.Title)
+		zap.L().Info("get message from " + i.Topic)
+		internal.InsertNews(db.DB, &page, topic)
 	}
 }

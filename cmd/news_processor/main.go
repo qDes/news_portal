@@ -31,7 +31,7 @@ func main() {
 	if err != nil {
 		logger.Error("kafka partions error", zap.Error(err))
 	}
-	consumer, err := master.ConsumePartition(topic, partions[0], sarama.OffsetOldest)
+	consumer, err := master.ConsumePartition(topic, partions[0], sarama.OffsetNewest)
 	if err != nil {
 		logger.Error("condumer error", zap.Error(err))
 	}

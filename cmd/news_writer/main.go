@@ -45,7 +45,7 @@ func main() {
 }
 
 func GetConsumer(master sarama.Consumer, topic string, partions []int32) sarama.PartitionConsumer {
-	consumer, err := master.ConsumePartition(topic, partions[0], sarama.OffsetOldest)
+	consumer, err := master.ConsumePartition(topic, partions[0], sarama.OffsetNewest)
 	if err != nil {
 		zap.L().Error("consumer economy error", zap.Error(err))
 	}

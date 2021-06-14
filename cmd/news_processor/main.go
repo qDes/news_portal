@@ -27,13 +27,13 @@ func main() {
 
 	topic := "raw_news"
 
-	partions, err := master.Partitions(topic)
+	//partions, err := master.Partitions(topic)
 	if err != nil {
 		logger.Error("kafka partions error", zap.Error(err))
 	}
-	consumer, err := master.ConsumePartition(topic, partions[0], sarama.OffsetNewest)
+	consumer, err := master.ConsumePartition(topic, 0, sarama.OffsetNewest)
 	if err != nil {
-		logger.Error("condumer error", zap.Error(err))
+		logger.Error("consumer error", zap.Error(err))
 	}
 
 	for i := range consumer.Messages() {

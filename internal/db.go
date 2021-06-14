@@ -64,10 +64,15 @@ func GetTables(topic string) []string {
 
 func GetFeedByTopic(db *sqlx.DB, topic string) []NewsPage {
 	var (
-		res                    []NewsPage
-		title, text, url, date string
+		res                           []NewsPage
+		title, text, url, date, query string
 	)
-	query := `SELECT title, text, url, dttm_inserted FROM news_` + topic + ";"
+
+	if topic == "all" {
+		query = `SELECT title, text, url, dttm_inserted FROM news_economy_politics_science ORDER BY dttm_inserted DESC;`
+	} else {
+		query = `SELECT title, text, url, dttm_inserted FROM news_` + topic + " ORDER BY dttm_inserted DESC;"
+	}
 	zap.L().Info(query)
 	rows, err := db.Query(query)
 	if err != nil {
